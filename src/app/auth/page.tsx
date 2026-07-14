@@ -221,12 +221,12 @@ export default function AuthPage() {
                   Password
                 </label>
                 {isLogin && (
-                  <a
-                    href="#"
+                  <Link
+                    href="/auth/forgot-password"
                     style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--color-primary)", textDecoration: "none" }}
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 )}
               </div>
               <input

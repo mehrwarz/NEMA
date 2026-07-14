@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { subjectAreas, learningPaths, siteConfig, lectures } from "./schema";
+import { subjectAreas, learningPaths, siteConfig, lectures, trainings } from "./schema";
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -102,6 +102,20 @@ async function seed() {
 
   console.log("✅ Subject areas seeded");
 
+  // Seed trainings based on subject areas
+  await db
+    .insert(trainings)
+    .values([
+      { title: "Mathematics Mastery", description: "Learn Calculus, Algebra, and more.", category: "Mathematics" },
+      { title: "Physics Fundamentals", description: "Mechanics, Thermodynamics, and Quantum.", category: "Physics" },
+      { title: "Computer Science Essentials", description: "Programming, Algorithms, and Data Structures.", category: "Computer Science" },
+      { title: "Literature Studies", description: "Poetry, Prose, and Literary Analysis.", category: "Literature" },
+      { title: "Engineering Basics", description: "Electrical, Mechanical, and Civil Engineering.", category: "Engineering" },
+    ])
+    .onConflictDoNothing();
+  
+  console.log("✅ Trainings seeded");
+
   // Seed learning paths
   await db
     .insert(learningPaths)
@@ -143,6 +157,7 @@ async function seed() {
         title: "Introduction to Calculus & Limits",
         description: "Learn the foundational concepts of limits, derivatives, and integrals visually with elegant animations.",
         category: "Mathematics",
+        trainingId: 1,
         videoUrl: "https://www.youtube.com/embed/WUvTyaaNkzM",
         duration: 1020, // 17 min
         sortOrder: 1,
@@ -151,6 +166,7 @@ async function seed() {
         title: "Linear Algebra: Essence of Vector Spaces",
         description: "Explore vectors, linear combinations, span, and basis vectors from a geometric perspective.",
         category: "Mathematics",
+        trainingId: 1,
         videoUrl: "https://www.youtube.com/embed/fNk_zzaMoSs",
         duration: 598, // ~10 min
         sortOrder: 2,
@@ -159,6 +175,7 @@ async function seed() {
         title: "The Map of Physics",
         description: "An overview of how all the different fields of physics fit together, from classical mechanics to quantum gravity.",
         category: "Physics",
+        trainingId: 2,
         videoUrl: "https://www.youtube.com/embed/ZihywtixUYo",
         duration: 919, // ~15 min
         sortOrder: 1,
@@ -167,6 +184,7 @@ async function seed() {
         title: "Quantum Mechanics: The Double Slit Experiment",
         description: "Understand the wave-particle duality and the fundamental mystery of quantum observation.",
         category: "Physics",
+        trainingId: 2,
         videoUrl: "https://www.youtube.com/embed/Q1YqgPAtzho",
         duration: 480, // 8 min
         sortOrder: 2,
@@ -175,6 +193,7 @@ async function seed() {
         title: "Harvard CS50 - Lecture 0: Computational Thinking",
         description: "Introduction to the intellectual enterprises of computer science and the art of programming.",
         category: "Computer Science",
+        trainingId: 3,
         videoUrl: "https://www.youtube.com/embed/e7a5NfIszP0",
         duration: 1540, // ~25 min excerpt
         sortOrder: 1,
@@ -183,6 +202,7 @@ async function seed() {
         title: "Binary and Hexadecimal Basics",
         description: "How computers count, store information, and process instruction sets using base-2 and base-16.",
         category: "Computer Science",
+        trainingId: 3,
         videoUrl: "https://www.youtube.com/embed/4EJKH_W-vkw",
         duration: 612, // 10 min
         sortOrder: 2,

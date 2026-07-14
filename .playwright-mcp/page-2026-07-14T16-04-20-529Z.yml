@@ -1,0 +1,158 @@
+- generic [ref=f1e1]:
+  - generic [active]:
+    - generic [ref=f1e41]:
+      - generic [ref=f1e42]:
+        - navigation [ref=f1e44]:
+          - button [disabled] [ref=f1e45]:
+            - img "previous" [ref=f1e46]
+          - generic [ref=f1e48]:
+            - generic [ref=f1e49]: 1/
+            - text: "2"
+          - button [ref=f1e50] [cursor=pointer]:
+            - img "next" [ref=f1e51]
+        - generic [ref=f1e54]:
+          - generic "Latest available version is detected (16.2.10)." [ref=f1e57]: Next.js 16.2.10
+          - generic [ref=f1e58]: Turbopack
+      - generic [ref=f1e59]:
+        - dialog "Console Error" [ref=f1e60]:
+          - generic [ref=f1e63]:
+            - generic [ref=f1e64]:
+              - generic [ref=f1e65]:
+                - generic [ref=f1e66]: Console Error
+                - generic [ref=f1e68]:
+                  - button "Copy Error Info" [ref=f1e69] [cursor=pointer]
+                  - link "Go to related documentation" [ref=f1e72] [cursor=pointer]:
+                    - /url: https://react.dev/link/rules-of-hooks
+                  - button "Attach Node.js inspector" [ref=f1e75] [cursor=pointer]
+              - generic [ref=f1e84]:
+                - generic [ref=f1e85]:
+                  - text: "React has detected a change in the order of Hooks called by Dashboard. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks:"
+                  - link "https://react.dev/link/rules-of-hooks" [ref=f1e86] [cursor=pointer]:
+                    - /url: https://react.dev/link/rules-of-hooks
+                  - text: Previous render Next render ------------------------------------------------------ 1. useContext useContext 2. useState useState 3. useState useState 4. useState useState 5. useState useState 6. useState useState 7. useState useState 8. useState useState 9. useState useState 10. useState useState 11. useState useState 12. useState useState 13. useEffect useEffect 14. undefined useEffect ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                - button "Show More" [ref=f1e88] [cursor=pointer]
+            - generic [ref=f1e90]:
+              - paragraph [ref=f1e92]:
+                - text: Call Stack
+                - generic [ref=f1e93]: "19"
+              - generic [ref=f1e94]:
+                - generic [ref=f1e95]:
+                  - text: createConsoleError
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e96] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_0ny0v99._.js (2379:71)
+              - generic [ref=f1e99]:
+                - generic [ref=f1e100]:
+                  - text: handleConsoleError
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e101] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_0ny0v99._.js (3165:54)
+              - generic [ref=f1e104]:
+                - generic [ref=f1e105]:
+                  - text: console.error
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e106] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_0ny0v99._.js (3312:57)
+              - generic [ref=f1e109]:
+                - generic [ref=f1e110]:
+                  - text: updateHookTypesDev
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e111] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (4587:25)
+              - generic [ref=f1e114]:
+                - generic [ref=f1e115]:
+                  - text: Object.useEffect
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e116] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (15441:13)
+              - generic [ref=f1e119]:
+                - generic [ref=f1e120]:
+                  - text: exports.useEffect
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e121] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_1xvzcw4._.js (1722:36)
+              - generic [ref=f1e124]:
+                - generic [ref=f1e125]:
+                  - text: Dashboard
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e126] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/nema_06pn4st._.js (81:188)
+              - generic [ref=f1e129]:
+                - generic [ref=f1e130]:
+                  - text: Object.react_stack_bottom_frame
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e131] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (15037:24)
+              - generic [ref=f1e134]:
+                - generic [ref=f1e135]:
+                  - text: renderWithHooks
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e136] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (4620:24)
+              - generic [ref=f1e139]:
+                - generic [ref=f1e140]:
+                  - text: updateFunctionComponent
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e141] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (6081:21)
+              - generic [ref=f1e144]:
+                - generic [ref=f1e145]:
+                  - text: beginWork
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e146] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (6691:24)
+              - generic [ref=f1e149]:
+                - generic [ref=f1e150]:
+                  - text: runWithFiberInDEV
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e151] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (965:74)
+              - generic [ref=f1e154]:
+                - generic [ref=f1e155]:
+                  - text: performUnitOfWork
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e156] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (9555:97)
+              - generic [ref=f1e159]:
+                - generic [ref=f1e160]:
+                  - text: workLoopSync
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e161] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (9449:40)
+              - generic [ref=f1e164]:
+                - generic [ref=f1e165]:
+                  - text: renderRootSync
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e166] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (9433:13)
+              - generic [ref=f1e169]:
+                - generic [ref=f1e170]:
+                  - text: performWorkOnRoot
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e171] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (9061:186)
+              - generic [ref=f1e174]:
+                - generic [ref=f1e175]:
+                  - text: performWorkOnRootViaSchedulerTask
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e176] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js (10255:9)
+              - generic [ref=f1e179]:
+                - generic [ref=f1e180]:
+                  - text: MessagePort.performWorkUntilDeadline
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e181] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_compiled_1xvzcw4._.js (2647:64)
+              - generic [ref=f1e184]:
+                - generic [ref=f1e185]:
+                  - text: ClientPageRoot
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=f1e186] [cursor=pointer]
+                - text: file:///C:/My%20Projects/nema/.next/dev/static/chunks/0kt5_next_dist_1qwd9tb._.js (4461:50)
+          - generic [ref=f1e189]: "1"
+          - generic [ref=f1e190]: "2"
+        - contentinfo [ref=f1e191]:
+          - region "Error feedback" [ref=f1e192]:
+            - paragraph [ref=f1e193]:
+              - link "Was this helpful?" [ref=f1e194] [cursor=pointer]:
+                - /url: https://nextjs.org/telemetry#error-feedback
+            - button "Mark as helpful" [ref=f1e195] [cursor=pointer]
+            - button "Mark as not helpful" [ref=f1e199] [cursor=pointer]
+    - generic [ref=f1e33] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f1e34]
+      - generic [ref=f1e202]:
+        - button "Open issues overlay" [ref=f1e203]:
+          - generic [ref=f1e204]:
+            - generic [ref=f1e205]: "1"
+            - generic [ref=f1e206]: "2"
+          - generic [ref=f1e207]:
+            - text: Issue
+            - generic [ref=f1e208]: s
+        - button "Collapse issues badge" [ref=f1e209]
+  - generic [ref=f1e213]:
+    - heading "This page couldn’t load" [level=1] [ref=f1e216]
+    - paragraph [ref=f1e217]: Reload to try again, or go back.
+    - generic [ref=f1e218]:
+      - button "Reload" [ref=f1e220] [cursor=pointer]
+      - button "Back" [ref=f1e221] [cursor=pointer]

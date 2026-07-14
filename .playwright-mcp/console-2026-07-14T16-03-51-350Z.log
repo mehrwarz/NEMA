@@ -1,0 +1,71 @@
+[     157ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/auth:0
+[     209ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[     256ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   17865ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   17874ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   19881ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   19884ms] [LOG] [Fast Refresh] done in 114ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   20686ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   20714ms] [LOG] [Fast Refresh] done in 131ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   21833ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   21854ms] [LOG] [Fast Refresh] done in 123ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   28432ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ Dashboard 1. useContext                 useContext
+2. useState                   useState
+3. useState                   useState
+4. useState                   useState
+5. useState                   useState
+6. useState                   useState
+7. useState                   useState
+8. useState                   useState
+9. useState                   useState
+10. useState                  useState
+11. useState                  useState
+12. useState                  useState
+13. useEffect                 useEffect
+14. undefined                 useEffect
+ @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:3318
+[   28463ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:4734:23)
+    at updateEffectImpl (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:5297:20)
+    at Object.useEffect (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:15442:13)
+    at exports.useEffect (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_1xvzcw4._.js:1722:36)
+    at Dashboard (http://localhost:3000/_next/static/chunks/nema_06pn4st._.js:81:188)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:15037:24)
+    at renderWithHooks (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:4620:24)
+    at updateFunctionComponent (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:6081:21)
+    at beginWork (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:6691:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:9555:97)
+    at workLoopSync (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:9449:40)
+    at renderRootSync (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:9433:13)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:9098:47)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_react-dom_1zq2j74._.js:10255:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/0kt5_next_dist_compiled_1xvzcw4._.js:2647:64)
+[   28549ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   28594ms] [LOG] [Fast Refresh] done in 146ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   48159ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   48165ms] [LOG] [Fast Refresh] done in 116ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   64694ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   64765ms] [LOG] [Fast Refresh] done in 183ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   83878ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   83883ms] [LOG] [Fast Refresh] done in 115ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   85532ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   85535ms] [LOG] [Fast Refresh] done in 112ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   86499ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[   86501ms] [LOG] [Fast Refresh] done in 112ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  108480ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  108876ms] [WARNING] [Fast Refresh] performing full reload because your application had an unrecoverable error @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  108894ms] [LOG] [Fast Refresh] done in 486ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109005ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109402ms] [LOG] [Fast Refresh] done in 507ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109526ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109556ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109738ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109741ms] [LOG] [Fast Refresh] done in 113ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109843ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477
+[  109969ms] [LOG] [Fast Refresh] done in 226ms @ http://localhost:3000/_next/static/chunks/0kt5_next_dist_0ny0v99._.js:2477

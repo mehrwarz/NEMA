@@ -56,6 +56,16 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 100 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   passwordHash: text("password_hash").notNull(),
+  avatarUrl: text("avatar_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+/** Trainings */
+export const trainings = pgTable("trainings", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -65,10 +75,24 @@ export const lectures = pgTable("lectures", {
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description"),
   category: varchar("category", { length: 100 }).notNull(), // e.g., "Mathematics", "Computer Science", "Physics"
+  trainingId: integer("training_id")
+    .references(() => trainings.id, { onDelete: "cascade" }),
   videoUrl: text("video_url").notNull(), // YouTube/Vimeo embed or direct video link
   duration: integer("duration").notNull(), // duration in seconds
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+/** User Enrollments */
+export const enrollments = pgTable("enrollments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  trainingId: integer("training_id")
+    .notNull()
+    .references(() => trainings.id, { onDelete: "cascade" }),
+  enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
 });
 
 /** User learning progress tracking */
@@ -85,4 +109,3 @@ export const userProgress = pgTable("user_progress", {
   lastWatchedAt: timestamp("last_watched_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-

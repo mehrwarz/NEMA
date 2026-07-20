@@ -1,8 +1,9 @@
+import { userProgress } from "@/lib/db/schema";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { userProgress } from "@/lib/db/schema";
 import { verifyToken } from "@/lib/auth";
-import { and, eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+
 
 export async function GET(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -15,11 +16,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // 1. Extract trainingId from query string (?trainingId=...)
+  const { searchParams } = request.nextUrl;
+  const trainingIdParam = searchParams.get("trainingId");
+
+  if (!trainingIdParam || isNaN(Number(trainingIdParam))) {
+    return NextResponse.json(
+      { error: "A valid trainingId query parameter is required." },
+      { status: 400 }
+    );
+  }
+
+  const trainingId = parseInt(trainingIdParam, 10);
+
   try {
-    const progress = await db
-      .select()
-      .from(userProgress)
-      .where(eq(userProgress.userId, session.user.id));
+    // 2. Query only rows matching BOTH userId and trainingId
+    const progress = await db.select().from(userProgress).where(
+      and(
+        eq(userProgress.userId, session.user.id),
+        eq(userProgress.trainingId, trainingId)
+      )
+    );
 
     return NextResponse.json({ progress });
   } catch (error) {
@@ -30,6 +47,7 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -46,7 +64,7 @@ export async function POST(request: NextRequest) {
   const user = session.user;
 
   try {
-    const { lectureId, watchedDuration, completed } = await request.json();
+    const { trainingId, lectureId, watchedDuration, completed } = await request.json();
 
     if (!lectureId) {
       return NextResponse.json(
@@ -66,7 +84,6 @@ export async function POST(request: NextRequest) {
         )
       )
       .limit(1);
-
     if (existing.length > 0) {
       // Update
       const record = existing[0];
@@ -87,6 +104,7 @@ export async function POST(request: NextRequest) {
       // Insert new
       await db.insert(userProgress).values({
         userId: user.id,
+        trainingId,
         lectureId,
         watchedDuration: watchedDuration || 0,
         completed: completed || false,

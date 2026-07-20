@@ -49,9 +49,7 @@ export default function Dashboard() {
 
 
   return (
-
     <div style={{ minHeight: "100vh", background: "#f1f5f9", fontFamily: "var(--font-sans)" }}>
-      <Navbar user={user} />
       { user?.role === "admin" ? <AdminDashboard /> : user?.role === "system_administrator" ? <SystemAdminDashboard /> : <UserDashboard />}
     </div>
   );

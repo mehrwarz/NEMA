@@ -20,11 +20,14 @@ export default function Loading() {
                         animation: "spin 1s linear infinite",
                     }}
                 />
-                <style jsx global>{`
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-          `}</style>
+                
+                {/* Changed from <style jsx global> to a plain HTML style tag */}
+                <style>{`
+                    @keyframes spin {
+                        to { transform: rotate(360deg); }
+                    }
+                `}</style>
+
                 <p style={{ color: "var(--color-text-muted)", fontWeight: 500 }}>Loading workspace...</p>
             </div>
         </div>

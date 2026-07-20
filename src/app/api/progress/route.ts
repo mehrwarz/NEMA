@@ -10,8 +10,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await verifyToken(token);
-  if (!user) {
+  const session = await verifyToken(token);
+  if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const progress = await db
       .select()
       .from(userProgress)
-      .where(eq(userProgress.userId, user.userId));
+      .where(eq(userProgress.userId, session.user.id));
 
     return NextResponse.json({ progress });
   } catch (error) {
@@ -37,10 +37,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await verifyToken(token);
-  if (!user) {
+  const session = await verifyToken(token);
+
+  if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const user = session.user;
 
   try {
     const { lectureId, watchedDuration, completed } = await request.json();
@@ -58,7 +61,7 @@ export async function POST(request: NextRequest) {
       .from(userProgress)
       .where(
         and(
-          eq(userProgress.userId, user.userId),
+          eq(userProgress.userId, user.id),
           eq(userProgress.lectureId, lectureId)
         )
       )
@@ -83,7 +86,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Insert new
       await db.insert(userProgress).values({
-        userId: user.userId,
+        userId: user.id,
         lectureId,
         watchedDuration: watchedDuration || 0,
         completed: completed || false,

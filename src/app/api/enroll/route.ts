@@ -7,12 +7,15 @@ export async function POST(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const user = await verifyToken(token);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await verifyToken(token);
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { trainingId } = await request.json();
-    await db.insert(enrollments).values({ userId: user.userId, trainingId });
+    if (!trainingId) {
+      return NextResponse.json({ error: "Training ID is required" }, { status: 400 });
+    }
+    await db.insert(enrollments).values({ userId: session.user.id, trainingId });
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Enrollment error:", error);

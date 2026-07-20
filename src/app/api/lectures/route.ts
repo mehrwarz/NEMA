@@ -9,10 +9,15 @@ export async function GET(request: NextRequest) {
   const trainingId = searchParams.get("trainingId");
 
   try {
-    let query = db.select().from(lectures);
-    
+    let query = db.select().from(lectures).$dynamic();
+
     if (trainingId) {
-      query = query.where(or(eq(lectures.trainingId, parseInt(trainingId)), isNull(lectures.trainingId)));
+      query = query.where(
+        or(
+          eq(lectures.trainingId, parseInt(trainingId)),
+          isNull(lectures.trainingId)
+        )
+      );
     }
 
     const list = await query.orderBy(asc(lectures.sortOrder));
@@ -30,9 +35,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  
-  const user = await verifyToken(token);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const session = await verifyToken(token);
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { title, description, category, videoUrl, duration, sortOrder, trainingId } = await request.json();

@@ -1,12 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GraduationCap, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { NextRequest } from "next/server";
 
-export default function AuthPage() {
+export default function AuthPage(request: NextRequest) {
   const router = useRouter();
+  
+  // Check if the user is already logged in
+  useEffect(() => {
+    async function checkLogin() {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
+      if (token) {
+        console.log(token)
+        router.push("/dashboard");
+      }
+    }
+
+    checkLogin();
+  }, []);
+
+  
+
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

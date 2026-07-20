@@ -8,14 +8,15 @@ export async function GET(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const user = await verifyToken(token);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await verifyToken(token);
+  
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const userEnrollments = await db
       .select()
       .from(enrollments)
-      .where(eq(enrollments.userId, user.userId));
+      .where(eq(enrollments.userId, session.user.id));
     return NextResponse.json({ enrollments: userEnrollments });
   } catch (error) {
     console.error("Fetch enrollments error:", error);
@@ -27,8 +28,8 @@ export async function DELETE(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const user = await verifyToken(token);
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await verifyToken(token);
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { trainingId } = await request.json();
@@ -36,7 +37,7 @@ export async function DELETE(request: NextRequest) {
     
     await db
         .delete(enrollments)
-        .where(and(eq(enrollments.userId, user.userId), eq(enrollments.trainingId, trainingId)));
+        .where(and(eq(enrollments.userId, session.user.id), eq(enrollments.trainingId, trainingId)));
     
     return NextResponse.json({ success: true });
   } catch (error) {

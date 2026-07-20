@@ -1,88 +1,74 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import {
-  GraduationCap,
-  Menu,
-  X,
-  UserCircle,
-} from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+export default function Navbar({ user }: { user: User | null }) {
+    const [mounted, setMounted] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const [activeTrainingId, setActiveTrainingId] = useState<number | null>(null);
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
-  return (
-    <nav
-      id="navbar"
-      className={`navbar${scrolled ? " scrolled" : ""}`}
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className="navbar-inner">
-        {/* Logo */}
-        <a href="#" className="navbar-logo" aria-label="mehrabani.org home">
-          <span className="navbar-logo-icon">
-            <GraduationCap size={20} />
-          </span>
-          <span className="navbar-logo-text">
-            mehrabani.org
-            <small>Knowledge For All</small>
-          </span>
-        </a>
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { method: "POST" });
+        router.push("/");
+    };
 
-        {/* Desktop nav links */}
-        <ul className="navbar-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Who We Serve</a></li>
-          <li><a href="#">Study Tracks</a></li>
-          <li><a href="#">Resources</a></li>
-        </ul>
-
-        {/* Actions */}
-        <div className="navbar-actions">
-          <a href="#" className="btn btn-ghost">Explore Library</a>
-          <a href="/auth" className="btn btn-outline-primary">
-            <UserCircle size={16} />
-            Learner Login
-          </a>
-          <a href="#" className="btn btn-danger">Support Us</a>
-
-          {/* Mobile toggle */}
-          <button
-            className="mobile-menu-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile dropdown */}
-      {mobileOpen && (
-        <div
-          style={{
-            padding: "1rem 1.5rem",
-            borderTop: "1px solid var(--color-border)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.75rem",
-          }}
+    return (
+        <nav
+            style={{
+                background: "white",
+                padding: "1rem 2rem",
+                borderBottom: "1px solid var(--color-border)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                height: "64px"
+            }}
         >
-          <a href="#" style={{ textDecoration: "none", color: "var(--color-text)", fontWeight: 500, fontSize: "0.95rem" }}>Home</a>
-          <a href="#" style={{ textDecoration: "none", color: "var(--color-text)", fontWeight: 500, fontSize: "0.95rem" }}>Who We Serve</a>
-          <a href="#" style={{ textDecoration: "none", color: "var(--color-text)", fontWeight: 500, fontSize: "0.95rem" }}>Study Tracks</a>
-          <a href="#" style={{ textDecoration: "none", color: "var(--color-text)", fontWeight: 500, fontSize: "0.95rem" }}>Resources</a>
-        </div>
-      )}
-    </nav>
-  );
+            <div style={{ fontWeight: 800, color: "var(--color-dark)" }}>
+                {activeTrainingId ? "Training View" : "Dashboard"}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div
+                        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                        style={{ fontWeight: 600, fontSize: "0.9rem", cursor: "pointer" }}
+                    >
+                        {user?.name}
+                    </div>
+                    <div
+                        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                        style={{
+                            width: "36px",
+                            height: "36px",
+                            borderRadius: "50%",
+                            background: "var(--color-primary)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: "white",
+                            fontWeight: 700,
+                            cursor: "pointer"
+                        }}
+                    >
+                        {user?.name.charAt(0).toUpperCase()}
+                    </div>
+                    {profileMenuOpen && (
+                        <div style={{ position: "absolute", right: 0, top: "100%", marginTop: "0.5rem", background: "white", borderRadius: "var(--radius-md)", border: "1px solid var(--color-border)", padding: "0.5rem", boxShadow: "var(--shadow-md)", width: "160px", zIndex: 10 }}>
+                            <button onClick={() => router.push("/dashboard/settings")} style={{ display: "block", width: "100%", padding: "0.5rem", textAlign: "left", cursor: "pointer", background: "none", border: "none" }}>Account Settings</button>
+                            <button onClick={handleLogout} style={{ display: "block", width: "100%", padding: "0.5rem", textAlign: "left", cursor: "pointer", background: "none", border: "none", color: "red" }}>Sign Out</button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </nav>
+    )
 }

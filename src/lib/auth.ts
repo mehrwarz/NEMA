@@ -1,5 +1,6 @@
 import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
+import { NextRequest } from "next/server";
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-mehrabani-change-me-in-production";
 const secretKey = new TextEncoder().encode(JWT_SECRET);
@@ -24,9 +25,12 @@ export function verifyPassword(password: string, storedHash: string): boolean {
 }
 
 export interface JWTPayload {
-  userId: number;
-  email: string;
-  name: string;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+    role: string;
+  }
 }
 
 /**
@@ -52,4 +56,11 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
   } catch (error) {
     return null;
   }
+}
+
+export async function getSession(request: NextRequest): Promise<JWTPayload | null> {
+  const token = request.cookies.get("token")?.value;
+  if (!token) return null;
+  
+  return await verifyToken(token);
 }

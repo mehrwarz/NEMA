@@ -1,68 +1,101 @@
-"use client"
+"use client";
 
 import { Sparkles, Award } from "lucide-react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Progress { id: number; lectureId: number; watchedDuration: number; completed: boolean }
-interface User { id: number; name: string; email: string; role: string }
-interface Training { id: number; title: string; description: string; category: string }
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+}
 
-export default function TopSummaryCard({ user, totalUsersCount }: { user: User | null; totalUsersCount: number }) {
-    const router = useRouter();
+interface Training {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+}
+
+interface WorkspaceDetail {
+    progress: number;
+    currentTraining: Training | null;
+    totalLectures: number;
+    completedCount: number;
+}
+
+export default function TopSummaryCard({
+    user,
+    totalUsersCount,
+}: {
+    user: User | null;
+    totalUsersCount: number;
+}) {
     const pathname = usePathname();
     const params = useParams();
-    const trainingId = Number(params.id);
-    const isTrainingWorkspace = pathname.includes("/dashboard/trainings/") && params.id;
+
+    const rawId = params?.id;
+    const trainingId = rawId ? Number(rawId) : null;
+    const isValidTrainingId = typeof trainingId === "number" && !isNaN(trainingId) && trainingId > 0;
+
+    const isTrainingWorkspace = Boolean(pathname.includes("/dashboard/trainings/") && isValidTrainingId);
     const isSettings = pathname.includes("/dashboard/settings");
     const isMainDashboard = pathname === "/dashboard";
     const isAdmin = user?.role === "admin" || user?.role === "system_administrator";
-    const [progress, setProgress] = useState<Progress[]>([]);
-    const [mounted, setMounted] = useState(false);
+
     const [trainings, setTrainings] = useState<Training[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [workspaceData, setWorkspaceData] = useState<WorkspaceDetail | null>(null);
 
-
+    // 1. Listen for real-time progress updates dispatched directly from page.tsx (0 extra API calls)
     useEffect(() => {
-        setMounted(true);
+        const handleWorkspaceUpdate = (e: Event) => {
+            const customEvent = e as CustomEvent<WorkspaceDetail>;
+            if (customEvent.detail) {
+                setWorkspaceData(customEvent.detail);
+            }
+        };
+
+        window.addEventListener("trainingWorkspaceUpdate", handleWorkspaceUpdate);
+        return () => {
+            window.removeEventListener("trainingWorkspaceUpdate", handleWorkspaceUpdate);
+        };
+    }, []);
+
+    // 2. Fetch overall training list once for dashboard counters
+    useEffect(() => {
+        let isMounted = true;
+
         async function loadLayoutData() {
             try {
-                const trainingId = useParams().id;
-                const [trainingsRes, progressRes] = await Promise.all([
-                    fetch("/api/trainings/user", { method: "post" }),
-                    fetch(`/api/progress?trainingId=${trainingId}`),
-                ]);
+                const trainingsRes = await fetch("/api/trainings/user", { method: "POST" });
+                if (!trainingsRes.ok) return;
 
-                const [trainingsData, progressData] = await Promise.all([
-                    trainingsRes.json(),
-                    progressRes.json(),
-                ]);
-                setTrainings(trainingsData || []);
-                setProgress(progressData.progress || []);
+                const trainingsData = await trainingsRes.json();
+                if (isMounted) {
+                    setTrainings(Array.isArray(trainingsData) ? trainingsData : trainingsData.trainings || []);
+                }
             } catch (error) {
                 console.error("Dashboard layout data error:", error);
-            } finally {
-                setLoading(false);
             }
         }
 
         loadLayoutData();
-    }, [router, params.id]);
 
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
-
-
-    const currentTraining = trainingId ? trainings.find((t) => t.id === trainingId) : null;
-    const totalCompleted = progress.filter((p) => p.lectureId == currentTraining?.id).length;
+    // Active training context & real-time percentage
+    const currentTraining = workspaceData?.currentTraining || (isValidTrainingId ? trainings.find((t) => t.id === trainingId) : null);
+    const courseProgressPercentage = workspaceData?.progress ?? 0;
 
     // CASE 1: Inside an active Training Page (Show course details & dynamic progress bar)
     if (isTrainingWorkspace && currentTraining) {
-        const courseProgressPercentage = trainings.length > 0 ? Math.min(Math.round((totalCompleted / currentTraining.id) * 100), 100) : 0;
-        // Determine path context
-
         return (
             <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", color: "white", padding: "2rem", borderRadius: "var(--radius-xl)", marginBottom: "2rem", boxShadow: "var(--shadow-lg)" }}>
-                <div style={{ display: "flex", justifyContent: "between", alignItems: "center", width: "100%" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "1.5rem" }}>
                     <div style={{ flex: 1 }}>
                         <span style={{ fontSize: "0.75rem", background: "rgba(255,255,255,0.15)", padding: "0.25rem 0.6rem", borderRadius: "9999px", fontWeight: 600, textTransform: "uppercase" }}>
                             {currentTraining.category || "Training"}
@@ -70,7 +103,7 @@ export default function TopSummaryCard({ user, totalUsersCount }: { user: User |
                         <h1 style={{ fontSize: "1.75rem", fontWeight: 800, marginTop: "0.5rem", marginBottom: "0.5rem" }}>
                             {currentTraining.title}
                         </h1>
-                        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.95rem", marginBottom: "1.5rem" }}>
+                        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.95rem", margin: 0 }}>
                             {currentTraining.description}
                         </p>
                     </div>
@@ -82,14 +115,21 @@ export default function TopSummaryCard({ user, totalUsersCount }: { user: User |
                     </div>
                 </div>
 
-                {/* Progress Bar Container */}
+                {/* Dynamic Progress Bar */}
                 <div style={{ width: "100%" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", fontWeight: 600, marginBottom: "0.5rem" }}>
                         <span>Course Track Progress</span>
                         <span>{courseProgressPercentage}% Complete</span>
                     </div>
                     <div style={{ width: "100%", height: "8px", background: "rgba(255,255,255,0.1)", borderRadius: "9999px", overflow: "hidden" }}>
-                        <div style={{ width: `${courseProgressPercentage}%`, height: "100%", background: "#10b981", transition: "width 0.4s ease-out" }} />
+                        <div
+                            style={{
+                                width: `${courseProgressPercentage}%`,
+                                height: "100%",
+                                background: "#10b981",
+                                transition: "width 0.4s ease-out",
+                            }}
+                        />
                     </div>
                 </div>
             </div>
@@ -117,9 +157,9 @@ export default function TopSummaryCard({ user, totalUsersCount }: { user: User |
     }
 
     // CASE 3: Standard Fallback / General User Dashboard Banner
-    let title = `Welcome Back, ${user?.name.split(" ")[0]}!`;
+    let title = `Welcome Back, ${user?.name ? user.name.split(" ")[0] : "User"}!`;
     let description = "Choose an available course track below to pick up right where you left off.";
-    let badgeText = `Level ${Math.floor(totalCompleted / 2) + 1}`;
+    let badgeText = "Level 1";
     let subBadgeText = "Apprentice";
 
     if (isSettings) {
@@ -147,7 +187,7 @@ export default function TopSummaryCard({ user, totalUsersCount }: { user: User |
                 <h1 style={{ fontSize: "1.75rem", fontWeight: 800, marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     {title} <Sparkles size={22} color="#facc15" />
                 </h1>
-                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.95rem" }}>
+                <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.95rem", margin: 0 }}>
                     {description}
                 </p>
             </div>
@@ -172,4 +212,4 @@ export default function TopSummaryCard({ user, totalUsersCount }: { user: User |
             </div>
         </div>
     );
-};
+}

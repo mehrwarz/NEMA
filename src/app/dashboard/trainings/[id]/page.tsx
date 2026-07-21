@@ -72,7 +72,7 @@ export default function TrainingWorkspace() {
                 const [trainingsRes, lecturesRes, progressRes] = await Promise.all([
                     fetch("/api/trainings"),
                     fetch(`/api/lectures?trainingId=${trainingId}`),
-                    fetch("/api/progress"),
+                    fetch(`/api/progress?trainingId=${trainingId}`), // FIXED: Added ?trainingId= parameter
                 ]);
 
                 const [trainingsData, lecturesData, progressData] = await Promise.all([
@@ -102,12 +102,16 @@ export default function TrainingWorkspace() {
     }, [trainingId, router]);
 
     // Derived states
-    const currentTraining = trainings.find(t => t.id === trainingId);
-    const activeCompleted = progress.filter(p => lectures.some(l => l.id === p.lectureId && p.completed)).length;
-    const percentCompleteActive = lectures.length > 0 ? Math.round((activeCompleted / lectures.length) * 100) : 0;
-    const filteredLectures = activeCategory === "All"
-        ? lectures
-        : lectures.filter((l) => l.category === activeCategory);
+    const currentTraining = trainings.find((t) => t.id === trainingId);
+    const activeCompleted = progress.filter((p) =>
+        lectures.some((l) => Number(l.id) === Number(p.lectureId) && p.completed)
+    ).length;
+    const percentCompleteActive =
+        lectures.length > 0 ? Math.round((activeCompleted / lectures.length) * 100) : 0;
+    const filteredLectures =
+        activeCategory === "All"
+            ? lectures
+            : lectures.filter((l) => l.category === activeCategory);
 
     // Sync progress data & training context up to the global layout frame dynamically
     useEffect(() => {
@@ -117,8 +121,8 @@ export default function TrainingWorkspace() {
                     progress: percentCompleteActive,
                     currentTraining: currentTraining,
                     totalLectures: lectures.length,
-                    completedCount: activeCompleted
-                }
+                    completedCount: activeCompleted,
+                },
             });
             window.dispatchEvent(event);
         }
@@ -129,7 +133,7 @@ export default function TrainingWorkspace() {
     }
 
     const getLectureProgress = (lectureId: number) => {
-        return progress.find((p) => p.lectureId === lectureId);
+        return progress.find((p) => Number(p.lectureId) === Number(lectureId));
     };
 
     const handleToggleComplete = async (lecture: Lecture) => {
@@ -137,14 +141,45 @@ export default function TrainingWorkspace() {
         setUpdatingProgress(true);
 
         const currentProg = getLectureProgress(lecture.id);
-        const newCompleted = !currentProg?.completed;
-        const newDuration = newCompleted ? lecture.duration : 0;
+        const newCompleted = true; // Always set to true since uncompleting is disabled
+        const newDuration = lecture.duration;
+
+        // Save previous state in case of network failure
+        const previousProgress = [...progress];
+
+        // Optimistically update local state immediately
+        setProgress((prev) => {
+            const existingIndex = prev.findIndex(
+                (p) => Number(p.lectureId) === Number(lecture.id)
+            );
+
+            if (existingIndex > -1) {
+                const updated = [...prev];
+                updated[existingIndex] = {
+                    ...updated[existingIndex],
+                    completed: true,
+                    watchedDuration: newDuration,
+                };
+                return updated;
+            }
+
+            return [
+                ...prev,
+                {
+                    id: Date.now(),
+                    lectureId: lecture.id,
+                    watchedDuration: newDuration,
+                    completed: true,
+                },
+            ];
+        });
 
         try {
             const res = await fetch("/api/progress", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    trainingId: trainingId,
                     lectureId: lecture.id,
                     watchedDuration: newDuration,
                     completed: newCompleted,
@@ -152,12 +187,22 @@ export default function TrainingWorkspace() {
             });
 
             if (res.ok) {
-                const updatedProgressRes = await fetch("/api/progress");
+                // FIXED: Included trainingId in query param & cache-busting timestamp
+                const updatedProgressRes = await fetch(
+                    `/api/progress?trainingId=${trainingId}&t=${Date.now()}`,
+                    { cache: "no-store" }
+                );
                 const updatedProgressData = await updatedProgressRes.json();
-                setProgress(updatedProgressData.progress || []);
+                
+                if (updatedProgressData.progress) {
+                    setProgress(updatedProgressData.progress);
+                }
+            } else {
+                setProgress(previousProgress);
             }
         } catch (error) {
             console.error("Update progress error:", error);
+            setProgress(previousProgress);
         } finally {
             setUpdatingProgress(false);
         }
@@ -191,7 +236,7 @@ export default function TrainingWorkspace() {
 
                             <button
                                 onClick={() => handleToggleComplete(activeLecture)}
-                                disabled={updatingProgress}
+                                disabled={updatingProgress || getLectureProgress(activeLecture.id)?.completed}
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
@@ -203,7 +248,7 @@ export default function TrainingWorkspace() {
                                     color: getLectureProgress(activeLecture.id)?.completed ? "#059669" : "white",
                                     fontSize: "0.85rem",
                                     fontWeight: 600,
-                                    cursor: "pointer",
+                                    cursor: getLectureProgress(activeLecture.id)?.completed ? "default" : "pointer",
                                     transition: "all 0.2s ease",
                                 }}
                             >

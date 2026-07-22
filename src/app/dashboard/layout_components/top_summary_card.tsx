@@ -43,9 +43,9 @@ export default function TopSummaryCard({
     const isSettings = pathname.includes("/dashboard/settings");
     const isMainDashboard = pathname === "/dashboard";
     const isAdmin = user?.role === "admin" || user?.role === "system_administrator";
-
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [workspaceData, setWorkspaceData] = useState<WorkspaceDetail | null>(null);
+    const [totalTrainings, setTotalTrainings] = useState({ count: 0 });
 
     // 1. Listen for real-time progress updates dispatched directly from page.tsx (0 extra API calls)
     useEffect(() => {
@@ -68,6 +68,8 @@ export default function TopSummaryCard({
 
         async function loadLayoutData() {
             try {
+                setTotalTrainings( await fetch("/api/trainings/count").then(res => res.json()));
+
                 const trainingsRes = await fetch("/api/trainings/user", { method: "POST" });
                 if (!trainingsRes.ok) return;
 
@@ -142,7 +144,7 @@ export default function TopSummaryCard({
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
                 <div style={{ background: "white", padding: "1.5rem", borderRadius: "var(--radius-lg)", border: "1px solid #e2e8f0", boxShadow: "var(--shadow-sm)" }}>
                     <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#64748b", textTransform: "uppercase" }}>Total Trainings</div>
-                    <div style={{ fontSize: "2rem", fontWeight: 800, color: "#1e1b4b", marginTop: "0.5rem" }}>{trainings.length}</div>
+                    <div style={{ fontSize: "2rem", fontWeight: 800, color: "#1e1b4b", marginTop: "0.5rem" }}>{totalTrainings.count}</div>
                 </div>
                 <div style={{ background: "white", padding: "1.5rem", borderRadius: "var(--radius-lg)", border: "1px solid #e2e8f0", boxShadow: "var(--shadow-sm)" }}>
                     <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#64748b", textTransform: "uppercase" }}>Total Users</div>

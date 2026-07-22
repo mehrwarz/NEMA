@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/loading";
-import Navbar from "@/components/Navbar";
 import UserDashboard from "./userDashboard";
 import AdminDashboard from "./adminDashboard";
 import SystemAdminDashboard from "./systemAdminDashboard";

@@ -1,0 +1,7 @@
+FROM qwen2.5-coder:3b
+
+# Set optimal context size for CPU + Code tasks (8k tokens)
+PARAMETER num_ctx 8192
+
+# Ensure high-speed response with standard CPU thread limit
+PARAMETER num_thread 4

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "build": {
+      "system": "You are a direct, concise AI coding assistant with bash access."
+    },
+    "general": { "disable": true },
+    "explore": { "disable": true },
+    "scout": { "disable": true },
+    "plan": { "disable": true }
+  },
+  "permission": {
+    "webfetch": "deny"
+  }
+}
